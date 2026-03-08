@@ -56,6 +56,16 @@ select,input{background:#09111f;color:#e6eefb;border:1px solid #26344d;border-ra
 <label>Waveform <span id="waveV"></span></label>
 <select id="wave"><option>sine</option><option>square</option><option selected>sawtooth</option></select>
 
+<label>Scale <span id="scaleV"></span></label>
+<select id="scale">
+  <option value="major_pentatonic" selected>major pentatonic</option>
+  <option value="minor_pentatonic">minor pentatonic</option>
+  <option value="chromatic">chromatic</option>
+  <option value="whole_tone">whole tone</option>
+  <option value="octatonic">octatonic</option>
+  <option value="just_intonation">just intonation / ratio-based</option>
+</select>
+
 <label>Tempo <span id="tempoV"></span></label><input id="tempo" type="range" min="0.3" max="2.5" step="0.01" value="1.0">
 <label>Inhibition <span id="inhV"></span></label><input id="inh" type="range" min="0" max="0.35" step="0.005" value="0.12">
 <label>Excitation <span id="excV"></span></label><input id="exc" type="range" min="0" max="0.18" step="0.005" value="0.05">
@@ -169,14 +179,45 @@ select,input{background:#09111f;color:#e6eefb;border:1px solid #26344d;border-ra
 <script>
 const GRID=4,N=16,BASE=[110,123.47,130.81,146.83,164.81,196,220,246.94,261.63,293.66,329.63,392,440,493.88,523.25,587.33],NAMES=["A2","B2","C3","D3","E3","G3","A3","B3","C4","D4","E4","G4","A4","B4","C5","D5"];
 const $=id=>document.getElementById(id);
-const els={cv:$("cv"),dom:$("dom"),cnt:$("cnt"),org:$("org"),aud:$("aud"),mode:$("mode"),wave:$("wave"),tempo:$("tempo"),inh:$("inh"),exc:$("exc"),diag:$("diag"),noise:$("noise"),ref:$("ref"),theme:$("theme"),dens:$("dens"),pitch:$("pitch"),decay:$("decay"),level:$("level"),spk:$("spk"),drift:$("drift"),dist:$("dist"),evo:$("evo"),hard:$("hard"),strike:$("strike")};
-const labels={modeV:els.mode,waveV:els.wave,tempoV:els.tempo,inhV:els.inh,excV:els.exc,diagV:els.diag,noiseV:els.noise,refV:els.ref,themeV:els.theme,densV:els.dens,pitchV:els.pitch,decayV:els.decay,levelV:els.level,spkV:els.spk,driftV:els.drift,distV:els.dist};
+const els={cv:$("cv"),dom:$("dom"),cnt:$("cnt"),org:$("org"),aud:$("aud"),mode:$("mode"),wave:$("wave"),scale:$("scale"),tempo:$("tempo"),inh:$("inh"),exc:$("exc"),diag:$("diag"),noise:$("noise"),ref:$("ref"),theme:$("theme"),dens:$("dens"),pitch:$("pitch"),decay:$("decay"),level:$("level"),spk:$("spk"),drift:$("drift"),dist:$("dist"),evo:$("evo"),hard:$("hard"),strike:$("strike")};
+const labels={modeV:els.mode,waveV:els.wave,scaleV:els.scale,tempoV:els.tempo,inhV:els.inh,excV:els.exc,diagV:els.diag,noiseV:els.noise,refV:els.ref,themeV:els.theme,densV:els.dens,pitchV:els.pitch,decayV:els.decay,levelV:els.level,spkV:els.spk,driftV:els.drift,distV:els.dist};
 function upd(){for(const k in labels){const e=labels[k]; $(k).textContent=(e.tagName==="SELECT")?e.value:Number(e.value).toFixed((e.id==="ref"||e.id==="pitch")?0:2)}} upd();
 Object.values(els).forEach(e=>{if(e&&("oninput" in e)) e.oninput=upd; if(e&&e.tagName==="SELECT") e.onchange=upd;});
 
 const st={phase:Array.from({length:N},()=>Math.random()),re:Array(N).fill(0),rate:BASE.map((f,i)=>((f/220)*0.85)*(0.95+0.1*Math.sin(i))),last:Array(N).fill(-999),count:Array(N).fill(0),t:0,eng:Array(N).fill(0),ep:0,total:0};
 function reset(){st.phase=Array.from({length:N},()=>Math.random()); st.re=Array(N).fill(0); st.last=Array(N).fill(-999); st.count=Array(N).fill(0); st.t=0; st.eng=Array(N).fill(0); st.ep=0; st.total=0;}
-const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)), idx=(r,c)=>r*GRID+c, fshift=f=>f*Math.pow(2,Number(els.pitch.value)/12);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)), idx=(r,c)=>r*GRID+c;
+function midiToFreq(m){ return 440 * Math.pow(2, (m - 69) / 12); }
+function buildScale(kind){
+  const rootMidi = 45;
+  const patterns = {
+    major_pentatonic: [0,2,4,7,9],
+    minor_pentatonic: [0,3,5,7,10],
+    chromatic: [0,1,2,3,4,5,6,7,8,9,10,11],
+    whole_tone: [0,2,4,6,8,10],
+    octatonic: [0,2,3,5,6,8,9,11]
+  };
+  if(kind === "just_intonation"){
+    const base = 110;
+    const ratios = [1, 9/8, 5/4, 4/3, 3/2, 5/3, 15/8, 2];
+    const out = [];
+    for(let i=0;i<16;i++){
+      const octave = Math.floor(i / ratios.length);
+      out.push(base * ratios[i % ratios.length] * Math.pow(2, octave));
+    }
+    return out;
+  }
+  const pat = patterns[kind] || patterns.major_pentatonic;
+  const out = [];
+  for(let i=0;i<16;i++){
+    const octave = Math.floor(i / pat.length);
+    const semis = pat[i % pat.length] + octave * 12;
+    out.push(midiToFreq(rootMidi + semis));
+  }
+  return out;
+}
+function activeBase(i){ return buildScale(els.scale.value)[i]; }
+const fshift=f=>f*Math.pow(2,Number(els.pitch.value)/12);
 function coupling(){
   const W=Array.from({length:N},()=>Array(N).fill(0)), add=(to,from,v)=>{if(to!==from)W[to][from]+=v};
   const inh=+els.inh.value, exc=+els.exc.value, diag=+els.diag.value, mode=els.mode.value;
@@ -195,9 +236,9 @@ function applyAudio(){
   audio.master.gain.value=+els.level.value;
   audio.speaker.frequency.setTargetAtTime(900 + (+els.spk.value)*2400, audio.ctx.currentTime, .03);
   audio.shaper.curve=curve(+els.dist.value);
-  audio.voices.forEach((v,i)=>{const det=1+(+els.drift.value)*0.02*Math.sin(audio.ctx.currentTime*.4+i*.7), f=fshift(BASE[i])*det; v.osc.type=els.wave.value; v.osc.frequency.setTargetAtTime(f,audio.ctx.currentTime,.01); v.f.frequency.setTargetAtTime(f*(1.2+(+els.spk.value)*.8),audio.ctx.currentTime,.02); v.f.Q.setTargetAtTime(4+(+els.spk.value)*5,audio.ctx.currentTime,.02);});
+  audio.voices.forEach((v,i)=>{const det=1+(+els.drift.value)*0.02*Math.sin(audio.ctx.currentTime*.4+i*.7), f=fshift(activeBase(i))*det; v.osc.type=els.wave.value; v.osc.frequency.setTargetAtTime(f,audio.ctx.currentTime,.01); v.f.frequency.setTargetAtTime(f*(1.2+(+els.spk.value)*.8),audio.ctx.currentTime,.02); v.f.Q.setTargetAtTime(4+(+els.spk.value)*5,audio.ctx.currentTime,.02);});
 }
-["pitch","level","spk","dist","drift"].forEach(id=>els[id].oninput=()=>{upd();applyAudio()}); els.wave.onchange=()=>{upd();applyAudio()};
+["pitch","level","spk","dist","drift"].forEach(id=>els[id].oninput=()=>{upd();applyAudio()}); els.wave.onchange=()=>{upd();applyAudio()}; els.scale.onchange=()=>{upd();applyAudio()};
 async function initAudio(){
   if(audio.ctx){if(audio.ctx.state==="suspended") await audio.ctx.resume(); applyAudio(); els.aud.textContent="Audio ready"; return;}
   const ctx=new (window.AudioContext||window.webkitAudioContext)(), master=ctx.createGain(), speaker=ctx.createBiquadFilter(), shaper=ctx.createWaveShaper(), click=ctx.createGain();
@@ -208,7 +249,7 @@ async function initAudio(){
 }
 function hit(i,now,amp=.18){
   const v=audio.voices[i], g=v.g.gain, decay=+els.decay.value, hard=els.hard.checked, strike=els.strike.checked;
-  const det=1+(+els.drift.value)*0.03*Math.sin(now*.9+i*.5), f=fshift(BASE[i])*det;
+  const det=1+(+els.drift.value)*0.03*Math.sin(now*.9+i*.5), f=fshift(activeBase(i))*det;
   v.osc.frequency.setTargetAtTime(f,now,.005); v.f.frequency.setTargetAtTime(f*(1.15+(+els.spk.value)*.7),now,.01);
   g.cancelScheduledValues(now); g.setValueAtTime(Math.max(g.value,.0001),now); g.linearRampToValueAtTime(amp, now + (hard?.001:.006)); g.exponentialRampToValueAtTime(.0001, now+decay);
   if(strike){const b=audio.ctx.createBuffer(1,Math.floor(audio.ctx.sampleRate*.018),audio.ctx.sampleRate), ch=b.getChannelData(0); for(let k=0;k<ch.length;k++) ch[k]=(Math.random()*2-1)*Math.exp(-k/(audio.ctx.sampleRate*.003));
