@@ -1,106 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Goldacre–Bean Music Device</title>
+<!doctype html>
+<html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Goldacre–Bean plausible clang</title>
 <style>
-:root{--bg:#08111f;--panel:#0f172a;--text:#e5eefb;--muted:#9fb2cc;--line:#223049}
-*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#06101d,#0a1221 30%,#0b1020);color:var(--text)}
-.wrap{max-width:1100px;margin:0 auto;padding:16px} h1{font-size:1.5rem;margin:.2rem 0} p{color:var(--muted);line-height:1.45}
-.grid{display:grid;grid-template-columns:1fr;gap:16px} @media(min-width:900px){.grid{grid-template-columns:1.5fr 1fr}}
-.card{background:rgba(15,23,42,.92);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.btn{background:#0ea5b7;color:white;border:none;border-radius:14px;padding:12px 16px;font-weight:600;cursor:pointer}
-.btn.secondary{background:#243247}.btn.outline{background:transparent;border:1px solid var(--line);color:var(--text)}
-canvas{width:100%;height:auto;border-radius:16px;border:1px solid var(--line);background:#050b16}
-.badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:#d7e9ff;background:#0b1322;font-size:.9rem}
-.control{margin:12px 0}.control label{display:flex;justify-content:space-between;gap:12px;font-size:.95rem;margin-bottom:6px}
-.control input[type=range]{width:100%}.small{font-size:.88rem;color:var(--muted)}
-.switchrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;margin:10px 0}
-select{width:100%;background:#09111f;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:1rem}
-.footer{margin-top:10px;color:var(--muted);font-size:.9rem}.mono{font-variant-numeric:tabular-nums}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:12px">
-    <div>
-      <div class="row" style="margin-bottom:8px">
-        <span class="badge">Goldacre–Bean inspired</span>
-        <span class="badge">16-cell browser instrument</span>
-      </div>
-      <h1>Cybernetic Morphogenesis Music Device</h1>
-      <p style="max-width:900px">A historically informed browser instrument based on the idea that the Goldacre–Bean machine made music from interacting pulse-generating “cells”. It is faithful in structure rather than exact circuitry: a 4×4 network, threshold-like firing, local inhibition, optional long-range nerve-net links, and evolving rhythmic themes.</p>
-    </div>
-    <div class="row">
-      <button class="btn" id="startBtn">Start</button>
-      <button class="btn secondary" id="pauseBtn">Pause</button>
-      <button class="btn outline" id="resetBtn">Reset</button>
-    </div>
-  </div>
+body{margin:0;font-family:system-ui,sans-serif;background:#0b1020;color:#e6eefb}
+.wrap{max-width:1100px;margin:auto;padding:16px}.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1.5fr 1fr}} .card{background:#0f172a;border:1px solid #26344d;border-radius:18px;padding:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.badge{padding:6px 10px;border-radius:999px;background:#0b1322;border:1px solid #26344d}
+.btn{padding:10px 14px;border-radius:12px;border:none;background:#0ea5b7;color:white;font-weight:600}.btn.s{background:#243247}.btn.o{background:transparent;color:#e6eefb;border:1px solid #26344d}
+canvas{width:100%;height:auto;background:#050b16;border:1px solid #26344d;border-radius:14px}
+label{display:flex;justify-content:space-between;margin:8px 0 4px}.small{color:#9fb2cc;font-size:.9rem} input[type=range],select{width:100%}
+select,input{background:#09111f;color:#e6eefb;border:1px solid #26344d;border-radius:10px;padding:8px}
+</style></head>
+<body><div class="wrap">
+<div class="row" style="justify-content:space-between;align-items:flex-end">
+<div><div class="row"><span class="badge">Goldacre–Bean inspired</span><span class="badge">plausible clang version</span></div>
+<h2>Cybernetic Morphogenesis Music Device</h2>
+<div class="small">Bright waveforms, abrupt gating, slight drift, simple filtering, strike noise, and mild distortion. No ring modulation.</div></div>
+<div class="row"><button class="btn" id="start">Start</button><button class="btn s" id="pause">Pause</button><button class="btn o" id="reset">Reset</button></div></div>
 
-  <div class="grid">
-    <div class="card">
-      <canvas id="cv" width="900" height="620"></canvas>
-      <div class="row" style="margin-top:10px">
-        <span class="badge mono" id="dominant">Dominant cell: 1</span>
-        <span class="badge mono" id="pulses">Pulse count: 0</span>
-        <span class="badge mono" id="cluster">Organisation: scattered</span>
-        <span class="badge mono" id="audio">Audio idle</span>
-      </div>
-      <div class="footer">Tip: turn <strong>Ringing output</strong> off for something closer to raw pulse music. Turn <strong>Evolving couplings</strong> on for shifting themes.</div>
-    </div>
-
-    <div class="card">
-      <div class="control">
-        <label for="mode">Topology</label>
-        <select id="mode">
-          <option value="tissue">Tissue (local inhibition)</option>
-          <option value="clusters">Cluster synchrony</option>
-          <option value="nerve">Nerve-net links</option>
-          <option value="all">Global competition</option>
-        </select>
-      </div>
-
-      <div class="control"><label><span>Tempo / charging rate</span><span class="mono" id="tempoVal"></span></label><input id="tempo" type="range" min="0.3" max="2.5" step="0.01" value="1.0"></div>
-      <div class="control"><label><span>Inhibition strength</span><span class="mono" id="inhibitVal"></span></label><input id="inhibit" type="range" min="0" max="0.35" step="0.005" value="0.12"></div>
-      <div class="control"><label><span>Long-range excitation</span><span class="mono" id="exciteVal"></span></label><input id="excite" type="range" min="0" max="0.18" step="0.005" value="0.05"></div>
-      <div class="control"><label><span>Diagonal coupling</span><span class="mono" id="diagonalVal"></span></label><input id="diagonal" type="range" min="0" max="0.12" step="0.005" value="0.02"></div>
-      <div class="control"><label><span>Noise / asymmetry</span><span class="mono" id="noiseVal"></span></label><input id="noise" type="range" min="0" max="0.08" step="0.002" value="0.01"></div>
-      <div class="control"><label><span>Refractory period (ms)</span><span class="mono" id="refractoryVal"></span></label><input id="refractory" type="range" min="2" max="120" step="1" value="18"></div>
-      <div class="control"><label><span>Theme drift</span><span class="mono" id="themeVal"></span></label><input id="theme" type="range" min="0" max="1.2" step="0.01" value="0.35"></div>
-      <div class="control"><label><span>Activity density</span><span class="mono" id="densityVal"></span></label><input id="density" type="range" min="0.3" max="1.4" step="0.01" value="0.7"></div>
-      <div class="control"><label><span>Output level</span><span class="mono" id="levelVal"></span></label><input id="level" type="range" min="0" max="1" step="0.01" value="0.45"></div>
-
-      <div class="switchrow"><div><div>Evolving couplings</div><div class="small">Lets motifs emerge and dissolve over time.</div></div><input id="evolving" type="checkbox" checked></div>
-      <div class="switchrow"><div><div>Ringing output</div><div class="small">Short resonant bursts rather than dry clicks.</div></div><input id="ringing" type="checkbox" checked></div>
-      <div class="small">Suggested settings: <strong>Tissue</strong> for morphogenesis-like behaviour, <strong>Nerve-net</strong> for livelier music, or switch off <strong>Ringing output</strong> for the raw pulse-music hypothesis.</div>
-    </div>
-  </div>
+<div class="grid">
+<div class="card">
+<canvas id="cv" width="900" height="620"></canvas>
+<div class="row" style="margin-top:10px"><span class="badge" id="dom">Dominant cell: 1</span><span class="badge" id="cnt">Pulse count: 0</span><span class="badge" id="org">Organisation: scattered</span><span class="badge" id="aud">Audio idle</span></div>
+<div class="small" style="margin-top:8px">Suggested starting point: sawtooth, hard gate on, strike on, speaker colour 0.5–0.7, drift 0.08–0.14, distortion 0.1–0.2.</div>
 </div>
 
+<div class="card">
+<label>Topology <span id="modeV"></span></label>
+<select id="mode"><option value="tissue">tissue</option><option value="clusters">clusters</option><option value="nerve" selected>nerve-net</option><option value="all">global competition</option></select>
+
+<label>Waveform <span id="waveV"></span></label>
+<select id="wave"><option>sine</option><option>square</option><option selected>sawtooth</option></select>
+
+<label>Tempo <span id="tempoV"></span></label><input id="tempo" type="range" min="0.3" max="2.5" step="0.01" value="1.0">
+<label>Inhibition <span id="inhV"></span></label><input id="inh" type="range" min="0" max="0.35" step="0.005" value="0.12">
+<label>Excitation <span id="excV"></span></label><input id="exc" type="range" min="0" max="0.18" step="0.005" value="0.05">
+<label>Diagonal coupling <span id="diagV"></span></label><input id="diag" type="range" min="0" max="0.12" step="0.005" value="0.02">
+<label>Noise <span id="noiseV"></span></label><input id="noise" type="range" min="0" max="0.08" step="0.002" value="0.01">
+<label>Refractory ms <span id="refV"></span></label><input id="ref" type="range" min="2" max="120" step="1" value="18">
+<label>Theme drift <span id="themeV"></span></label><input id="theme" type="range" min="0" max="1.2" step="0.01" value="0.35">
+<label>Density <span id="densV"></span></label><input id="dens" type="range" min="0.3" max="1.4" step="0.01" value="0.75">
+<label>Pitch shift semitones <span id="pitchV"></span></label><input id="pitch" type="range" min="-24" max="24" step="1" value="-7">
+<label>Decay seconds <span id="decayV"></span></label><input id="decay" type="range" min="0.02" max="2.2" step="0.01" value="1.55">
+<label>Output level <span id="levelV"></span></label><input id="level" type="range" min="0" max="1.5" step="0.01" value="1.44">
+<label>Speaker colour <span id="spkV"></span></label><input id="spk" type="range" min="0" max="1" step="0.01" value="0.82">
+<label>Drift/detune <span id="driftV"></span></label><input id="drift" type="range" min="0" max="0.3" step="0.005" value="0.26">
+<label>Distortion <span id="distV"></span></label><input id="dist" type="range" min="0" max="0.6" step="0.01" value="0.27">
+
+<div class="row" style="justify-content:space-between;margin-top:10px"><span>Evolving couplings</span><input id="evo" type="checkbox" checked></div>
+<div class="row" style="justify-content:space-between"><span>Hard gate</span><input id="hard" type="checkbox" checked></div>
+<div class="row" style="justify-content:space-between"><span>Mechanical strike layer</span><input id="strike" type="checkbox" checked></div>
+</div></div></div>
+
 <script>
-const GRID=4,N=16;
-const NOTE_NAMES=["A2","B2","C3","D3","E3","G3","A3","B3","C4","D4","E4","G4","A4","B4","C5","D5"];
-const FREQS=[110.0,123.47,130.81,146.83,164.81,196.0,220.0,246.94,261.63,293.66,329.63,392.0,440.0,493.88,523.25,587.33];
+const GRID=4,N=16,BASE=[110,123.47,130.81,146.83,164.81,196,220,246.94,261.63,293.66,329.63,392,440,493.88,523.25,587.33],NAMES=["A2","B2","C3","D3","E3","G3","A3","B3","C4","D4","E4","G4","A4","B4","C5","D5"];
 const $=id=>document.getElementById(id);
-const els={cv:$("cv"),dominant:$("dominant"),pulses:$("pulses"),cluster:$("cluster"),audio:$("audio"),mode:$("mode"),tempo:$("tempo"),inhibit:$("inhibit"),excite:$("excite"),diagonal:$("diagonal"),noise:$("noise"),refractory:$("refractory"),theme:$("theme"),density:$("density"),level:$("level"),evolving:$("evolving"),ringing:$("ringing")};
-function updateLabels(){["tempo","inhibit","excite","diagonal","noise","refractory","theme","density","level"].forEach(id=>$(id+"Val").textContent=Number(els[id].value).toFixed(id==="refractory"?0:2));}
-updateLabels();["tempo","inhibit","excite","diagonal","noise","refractory","theme","density","level"].forEach(id=>els[id].addEventListener("input",updateLabels));
-function clamp(x,lo,hi){return Math.max(lo,Math.min(hi,x))} function idx(r,c){return r*GRID+c}
-const state={phase:Array.from({length:N},()=>Math.random()),refrac:Array.from({length:N},()=>0),rate:FREQS.map((f,i)=>((f/220)*0.85)*(0.95+0.1*Math.sin(i))),lastFire:Array.from({length:N},()=>-999),fireCount:Array.from({length:N},()=>0),t:0,energy:Array.from({length:N},()=>0),evolvingPhase:0,pulseTotal:0};
-function resetMachine(){state.phase=Array.from({length:N},()=>Math.random());state.refrac=Array.from({length:N},()=>0);state.rate=FREQS.map((f,i)=>((f/220)*0.85)*(0.95+0.1*Math.sin(i)));state.lastFire=Array.from({length:N},()=>-999);state.fireCount=Array.from({length:N},()=>0);state.t=0;state.energy=Array.from({length:N},()=>0);state.evolvingPhase=0;state.pulseTotal=0;}
-function buildCoupling(mode,inhibit,excite,diagonal,evolvingPhase){const W=Array.from({length:N},()=>Array(N).fill(0));const add=(to,from,val)=>{if(to!==from)W[to][from]+=val};for(let r=0;r<GRID;r++){for(let c=0;c<GRID;c++){const i=idx(r,c);const nbrs=[];if(r>0)nbrs.push(idx(r-1,c));if(r<GRID-1)nbrs.push(idx(r+1,c));if(c>0)nbrs.push(idx(r,c-1));if(c<GRID-1)nbrs.push(idx(r,c+1));nbrs.forEach(j=>add(j,i,-inhibit));if(diagonal>0){const diags=[];if(r>0&&c>0)diags.push(idx(r-1,c-1));if(r>0&&c<GRID-1)diags.push(idx(r-1,c+1));if(r<GRID-1&&c>0)diags.push(idx(r+1,c-1));if(r<GRID-1&&c<GRID-1)diags.push(idx(r+1,c+1));diags.forEach(j=>add(j,i,-diagonal));}}}if(mode==="nerve"){[[0,6],[6,15],[15,9],[9,3],[3,12],[12,5],[5,11],[11,0]].forEach(([a,b],k)=>{const wobble=0.7+0.3*Math.sin(evolvingPhase+k*0.7);add(b,a,excite*wobble);add(a,b,excite*0.6*wobble);});}if(mode==="clusters"){[[0,1,4,5],[2,3,6,7],[8,9,12,13],[10,11,14,15]].forEach((g,gi)=>{const wobble=0.75+0.25*Math.sin(evolvingPhase*1.2+gi*0.9);g.forEach(a=>g.forEach(b=>{if(a!==b)add(a,b,excite*wobble)}));});}if(mode==="all"){for(let i=0;i<N;i++)for(let j=0;j<N;j++)if(i!==j)W[i][j]+=-inhibit*0.55;}return W;}
-let audio={ctx:null,master:null,clickGain:null,voices:[]},running=false,raf=null,last=0;
-async function initAudio(){if(audio.ctx){if(audio.ctx.state==="suspended")await audio.ctx.resume();els.audio.textContent="Audio ready";return;}const ctx=new (window.AudioContext||window.webkitAudioContext)();const master=ctx.createGain();master.gain.value=Number(els.level.value);master.connect(ctx.destination);const clickGain=ctx.createGain();clickGain.gain.value=0.12;clickGain.connect(master);const voices=FREQS.map(freq=>{const osc=ctx.createOscillator();const filter=ctx.createBiquadFilter();const gain=ctx.createGain();filter.type="bandpass";filter.frequency.value=freq;filter.Q.value=8;osc.type="square";osc.frequency.value=freq;gain.gain.value=0;osc.connect(filter);filter.connect(gain);gain.connect(master);osc.start();return{osc,filter,gain,freq};});audio={ctx,master,clickGain,voices};els.audio.textContent="Audio ready";}
-function triggerPulseSound(i,now,amp=0.12){if(!audio.ctx)return;const ringing=els.ringing.checked;const v=audio.voices[i];const g=v.gain.gain;g.cancelScheduledValues(now);g.setValueAtTime(g.value,now);const burst=ringing?amp:amp*0.45;g.linearRampToValueAtTime(burst,now+0.003);g.exponentialRampToValueAtTime(0.0001,now+(ringing?0.12:0.035));const buffer=audio.ctx.createBuffer(1,Math.floor(audio.ctx.sampleRate*0.01),audio.ctx.sampleRate);const ch=buffer.getChannelData(0);for(let k=0;k<ch.length;k++)ch[k]=(Math.random()*2-1)*Math.exp(-k/(audio.ctx.sampleRate*0.0018));const src=audio.ctx.createBufferSource();const cg=audio.ctx.createGain();cg.gain.value=0.015+amp*0.08;src.buffer=buffer;src.connect(cg);cg.connect(audio.clickGain);src.start(now);}
-function roundRect(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);if(fill)ctx.fill();if(stroke)ctx.stroke();}
-function draw(){const ctx=els.cv.getContext("2d"),w=els.cv.width,h=els.cv.height;ctx.clearRect(0,0,w,h);ctx.fillStyle="#050b16";ctx.fillRect(0,0,w,h);const pad=24,cellW=(w-pad*2)/GRID,cellH=(h-pad*2)/GRID;for(let r=0;r<GRID;r++){for(let c=0;c<GRID;c++){const i=idx(r,c),x=pad+c*cellW,y=pad+r*cellH,phase=state.phase[i],glow=state.energy[i],recent=Math.max(0,1-(state.t-state.lastFire[i])*5),hue=205+Math.floor(i*6);ctx.fillStyle=`hsla(${hue},80%,${12+recent*35+glow*15}%,1)`;ctx.strokeStyle=`hsla(${hue},90%,${40+recent*30}%,.9)`;ctx.lineWidth=2;roundRect(ctx,x+8,y+8,cellW-16,cellH-16,18,true,true);ctx.fillStyle="rgba(255,255,255,.92)";ctx.font="12px sans-serif";ctx.fillText(`Cell ${i+1}`,x+18,y+28);ctx.fillText(NOTE_NAMES[i],x+18,y+46);ctx.fillStyle="rgba(255,255,255,.12)";ctx.fillRect(x+18,y+cellH-28,cellW-36,10);ctx.fillStyle=`hsla(${hue},90%,70%,1)`;ctx.fillRect(x+18,y+cellH-28,(cellW-36)*clamp(phase,0,1),10);}}}
-function step(now){const dt=Math.min(0.05,(now-last)/1000||0.016);last=now;state.t+=dt;const tempo=Number(els.tempo.value),inhibit=Number(els.inhibit.value),excite=Number(els.excite.value),diagonal=Number(els.diagonal.value),noise=Number(els.noise.value),refractorySec=Number(els.refractory.value)/1000,density=Number(els.density.value),themeDrift=Number(els.theme.value);if(els.evolving.checked)state.evolvingPhase+=dt*themeDrift*1.8;const W=buildCoupling(els.mode.value,inhibit,excite,diagonal,state.evolvingPhase);const pulses=Array(N).fill(0);let pulseCountThisFrame=0;for(let i=0;i<N;i++){const drift=els.evolving.checked?(0.13*Math.sin(state.t*(0.11+i*0.005)+i*0.7)):0;const rateBase=tempo*density*(0.28+state.rate[i]*0.17);const dv=dt*rateBase*(1-0.14*state.phase[i]+drift);state.phase[i]+=dv+(Math.random()*2-1)*noise*dt*7;state.refrac[i]=Math.max(0,state.refrac[i]-dt);if(state.refrac[i]>0)state.phase[i]=Math.min(state.phase[i],0.03);}for(let i=0;i<N;i++){if(state.phase[i]>=1&&state.refrac[i]<=0){pulses[i]=1;state.phase[i]=0;state.refrac[i]=refractorySec;state.lastFire[i]=state.t;state.fireCount[i]+=1;state.energy[i]=1;pulseCountThisFrame++;state.pulseTotal++;if(running&&audio.ctx){const level=0.08+0.04*Math.sin(state.t*0.9+i*0.3);triggerPulseSound(i,audio.ctx.currentTime,level);}}}if(pulseCountThisFrame>0){for(let j=0;j<N;j++){let sum=0;for(let i=0;i<N;i++)sum+=W[j][i]*pulses[i];state.phase[j]=clamp(state.phase[j]+sum,0,1.15);}}for(let i=0;i<N;i++)state.energy[i]*=0.96;const order=state.fireCount.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v),dominant=order[0]?.i??0,top4=order.slice(0,4).map(x=>x.i);let cluster="scattered";[[0,1,4,5],[2,3,6,7],[8,9,12,13],[10,11,14,15]].forEach((set,g)=>{const overlap=top4.filter(x=>set.includes(x)).length;if(overlap>=3)cluster=`cluster ${g+1}`});if(els.mode.value==="all")cluster="global competition";if(els.mode.value==="nerve")cluster="nerve-net drift";els.dominant.textContent=`Dominant cell: ${dominant+1} (${NOTE_NAMES[dominant]})`;els.pulses.textContent=`Pulse count: ${state.pulseTotal}`;els.cluster.textContent=`Organisation: ${cluster}`;if(audio.master)audio.master.gain.value=Number(els.level.value);draw();if(running)raf=requestAnimationFrame(step);}
-$("startBtn").addEventListener("click",async()=>{await initAudio();running=true;cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(step);});
-$("pauseBtn").addEventListener("click",()=>{running=false;cancelAnimationFrame(raf);draw();});
-$("resetBtn").addEventListener("click",()=>{resetMachine();draw();});
+const els={cv:$("cv"),dom:$("dom"),cnt:$("cnt"),org:$("org"),aud:$("aud"),mode:$("mode"),wave:$("wave"),tempo:$("tempo"),inh:$("inh"),exc:$("exc"),diag:$("diag"),noise:$("noise"),ref:$("ref"),theme:$("theme"),dens:$("dens"),pitch:$("pitch"),decay:$("decay"),level:$("level"),spk:$("spk"),drift:$("drift"),dist:$("dist"),evo:$("evo"),hard:$("hard"),strike:$("strike")};
+const labels={modeV:els.mode,waveV:els.wave,tempoV:els.tempo,inhV:els.inh,excV:els.exc,diagV:els.diag,noiseV:els.noise,refV:els.ref,themeV:els.theme,densV:els.dens,pitchV:els.pitch,decayV:els.decay,levelV:els.level,spkV:els.spk,driftV:els.drift,distV:els.dist};
+function upd(){for(const k in labels){const e=labels[k]; $(k).textContent=(e.tagName==="SELECT")?e.value:Number(e.value).toFixed((e.id==="ref"||e.id==="pitch")?0:2)}} upd();
+Object.values(els).forEach(e=>{if(e&&("oninput" in e)) e.oninput=upd; if(e&&e.tagName==="SELECT") e.onchange=upd;});
+
+const st={phase:Array.from({length:N},()=>Math.random()),re:Array(N).fill(0),rate:BASE.map((f,i)=>((f/220)*0.85)*(0.95+0.1*Math.sin(i))),last:Array(N).fill(-999),count:Array(N).fill(0),t:0,eng:Array(N).fill(0),ep:0,total:0};
+function reset(){st.phase=Array.from({length:N},()=>Math.random()); st.re=Array(N).fill(0); st.last=Array(N).fill(-999); st.count=Array(N).fill(0); st.t=0; st.eng=Array(N).fill(0); st.ep=0; st.total=0;}
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)), idx=(r,c)=>r*GRID+c, fshift=f=>f*Math.pow(2,Number(els.pitch.value)/12);
+function coupling(){
+  const W=Array.from({length:N},()=>Array(N).fill(0)), add=(to,from,v)=>{if(to!==from)W[to][from]+=v};
+  const inh=+els.inh.value, exc=+els.exc.value, diag=+els.diag.value, mode=els.mode.value;
+  for(let r=0;r<GRID;r++) for(let c=0;c<GRID;c++){ const i=idx(r,c), ns=[]; if(r>0)ns.push(idx(r-1,c)); if(r<GRID-1)ns.push(idx(r+1,c)); if(c>0)ns.push(idx(r,c-1)); if(c<GRID-1)ns.push(idx(r,c+1)); ns.forEach(j=>add(j,i,-inh));
+    if(diag>0){ [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([dr,dc])=>{let rr=r+dr,cc=c+dc; if(rr>=0&&rr<GRID&&cc>=0&&cc<GRID) add(idx(rr,cc),i,-diag);});}}
+  if(mode==="nerve") [[0,6],[6,15],[15,9],[9,3],[3,12],[12,5],[5,11],[11,0]].forEach(([a,b],k)=>{const w=.7+.3*Math.sin(st.ep+k*.7); add(b,a,exc*w); add(a,b,exc*.6*w);});
+  if(mode==="clusters") [[0,1,4,5],[2,3,6,7],[8,9,12,13],[10,11,14,15]].forEach((g,gi)=>{const w=.75+.25*Math.sin(st.ep*1.2+gi*.9); g.forEach(a=>g.forEach(b=>{if(a!==b)add(a,b,exc*w)}));});
+  if(mode==="all") for(let i=0;i<N;i++) for(let j=0;j<N;j++) if(i!==j) W[i][j]+=-inh*.55;
+  return W;
+}
+
+let audio={ctx:null,master:null,speaker:null,shaper:null,click:null,voices:[]}, running=false, raf=null, last=0;
+function curve(a){const k=Math.max(0,a)*120,n=2048,c=new Float32Array(n); for(let i=0;i<n;i++){const x=i*2/n-1; c[i]=((3+k)*x*20*Math.PI/180)/(Math.PI+k*Math.abs(x));} return c;}
+function applyAudio(){
+  if(!audio.ctx) return;
+  audio.master.gain.value=+els.level.value;
+  audio.speaker.frequency.setTargetAtTime(900 + (+els.spk.value)*2400, audio.ctx.currentTime, .03);
+  audio.shaper.curve=curve(+els.dist.value);
+  audio.voices.forEach((v,i)=>{const det=1+(+els.drift.value)*0.02*Math.sin(audio.ctx.currentTime*.4+i*.7), f=fshift(BASE[i])*det; v.osc.type=els.wave.value; v.osc.frequency.setTargetAtTime(f,audio.ctx.currentTime,.01); v.f.frequency.setTargetAtTime(f*(1.2+(+els.spk.value)*.8),audio.ctx.currentTime,.02); v.f.Q.setTargetAtTime(4+(+els.spk.value)*5,audio.ctx.currentTime,.02);});
+}
+["pitch","level","spk","dist","drift"].forEach(id=>els[id].oninput=()=>{upd();applyAudio()}); els.wave.onchange=()=>{upd();applyAudio()};
+async function initAudio(){
+  if(audio.ctx){if(audio.ctx.state==="suspended") await audio.ctx.resume(); applyAudio(); els.aud.textContent="Audio ready"; return;}
+  const ctx=new (window.AudioContext||window.webkitAudioContext)(), master=ctx.createGain(), speaker=ctx.createBiquadFilter(), shaper=ctx.createWaveShaper(), click=ctx.createGain();
+  master.connect(speaker); speaker.connect(shaper); shaper.connect(ctx.destination); click.connect(speaker);
+  speaker.type="lowpass"; click.gain.value=.22;
+  const voices=BASE.map((f,i)=>{const osc=ctx.createOscillator(), bp=ctx.createBiquadFilter(), g=ctx.createGain(); bp.type="bandpass"; g.gain.value=0; osc.connect(bp); bp.connect(g); g.connect(master); osc.start(); return {osc:osc,f:bp,g:g};});
+  audio={ctx,master,speaker,shaper,click,voices}; applyAudio(); els.aud.textContent="Audio ready";
+}
+function hit(i,now,amp=.18){
+  const v=audio.voices[i], g=v.g.gain, decay=+els.decay.value, hard=els.hard.checked, strike=els.strike.checked;
+  const det=1+(+els.drift.value)*0.03*Math.sin(now*.9+i*.5), f=fshift(BASE[i])*det;
+  v.osc.frequency.setTargetAtTime(f,now,.005); v.f.frequency.setTargetAtTime(f*(1.15+(+els.spk.value)*.7),now,.01);
+  g.cancelScheduledValues(now); g.setValueAtTime(Math.max(g.value,.0001),now); g.linearRampToValueAtTime(amp, now + (hard?.001:.006)); g.exponentialRampToValueAtTime(.0001, now+decay);
+  if(strike){const b=audio.ctx.createBuffer(1,Math.floor(audio.ctx.sampleRate*.018),audio.ctx.sampleRate), ch=b.getChannelData(0); for(let k=0;k<ch.length;k++) ch[k]=(Math.random()*2-1)*Math.exp(-k/(audio.ctx.sampleRate*.003));
+    const src=audio.ctx.createBufferSource(), bp=audio.ctx.createBiquadFilter(), cg=audio.ctx.createGain(); bp.type="bandpass"; bp.frequency.value=f*1.8; bp.Q.value=.9; cg.gain.value=.035+amp*.12; src.buffer=b; src.connect(bp); bp.connect(cg); cg.connect(audio.click); src.start(now);}
+}
+function rr(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);if(fill)ctx.fill();if(stroke)ctx.stroke();}
+function draw(){
+  const c=els.cv.getContext("2d"), w=els.cv.width, h=els.cv.height; c.clearRect(0,0,w,h); c.fillStyle="#050b16"; c.fillRect(0,0,w,h);
+  const pad=24,cw=(w-pad*2)/GRID,ch=(h-pad*2)/GRID;
+  for(let r=0;r<GRID;r++) for(let cc=0;cc<GRID;cc++){const i=idx(r,cc),x=pad+cc*cw,y=pad+r*ch,p=st.phase[i],gl=st.eng[i],recent=Math.max(0,1-(st.t-st.last[i])*5),hue=205+Math.floor(i*6);
+    c.fillStyle=`hsla(${hue},80%,${12+recent*35+gl*15}%,1)`; c.strokeStyle=`hsla(${hue},90%,${40+recent*30}%,.9)`; c.lineWidth=2; rr(c,x+8,y+8,cw-16,ch-16,18,true,true);
+    c.fillStyle="rgba(255,255,255,.92)"; c.font="12px sans-serif"; c.fillText(`Cell ${i+1}`,x+18,y+28); c.fillText(NAMES[i],x+18,y+46); c.fillStyle="rgba(255,255,255,.12)"; c.fillRect(x+18,y+ch-28,cw-36,10); c.fillStyle=`hsla(${hue},90%,70%,1)`; c.fillRect(x+18,y+ch-28,(cw-36)*clamp(p,0,1),10);}
+}
+function step(t){
+  const dt=Math.min(.05,(t-last)/1000||.016); last=t; st.t+=dt; if(els.evo.checked) st.ep+=dt*(+els.theme.value)*1.8;
+  const W=coupling(), pulses=Array(N).fill(0); let nfire=0;
+  for(let i=0;i<N;i++){const drift=(+els.drift.value)*Math.sin(st.t*(.16+i*.009)+i*.7), evo=els.evo.checked?(0.13*Math.sin(st.t*(.11+i*.005)+i*.7)):0, rate=(+els.tempo.value)*(+els.dens.value)*(.28+st.rate[i]*.17);
+    st.phase[i]+=dt*rate*(1-.14*st.phase[i]+evo+drift*.15)+(Math.random()*2-1)*(+els.noise.value)*dt*7; st.re[i]=Math.max(0,st.re[i]-dt); if(st.re[i]>0) st.phase[i]=Math.min(st.phase[i],.03);}
+  for(let i=0;i<N;i++) if(st.phase[i]>=1&&st.re[i]<=0){pulses[i]=1; st.phase[i]=0; st.re[i]=(+els.ref.value)/1000; st.last[i]=st.t; st.count[i]+=1; st.eng[i]=1; nfire++; st.total++; if(running&&audio.ctx) hit(i,audio.ctx.currentTime,.17+.10*Math.sin(st.t*.9+i*.3));}
+  if(nfire>0) for(let j=0;j<N;j++){let s=0; for(let i=0;i<N;i++) s+=W[j][i]*pulses[i]; st.phase[j]=clamp(st.phase[j]+s,0,1.15);}
+  for(let i=0;i<N;i++) st.eng[i]*=.96;
+  const ord=st.count.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v), dom=ord[0]?.i??0, top4=ord.slice(0,4).map(x=>x.i); let org="scattered";
+  [[0,1,4,5],[2,3,6,7],[8,9,12,13],[10,11,14,15]].forEach((set,g)=>{if(top4.filter(x=>set.includes(x)).length>=3) org=`cluster ${g+1}`}); if(els.mode.value==="all") org="global competition"; if(els.mode.value==="nerve") org="nerve-net drift";
+  els.dom.textContent=`Dominant cell: ${dom+1} (${NAMES[dom]})`; els.cnt.textContent=`Pulse count: ${st.total}`; els.org.textContent=`Organisation: ${org}`;
+  draw(); if(running) raf=requestAnimationFrame(step);
+}
+$("start").onclick=async()=>{await initAudio(); running=true; cancelAnimationFrame(raf); last=performance.now(); raf=requestAnimationFrame(step);};
+$("pause").onclick=()=>{running=false; cancelAnimationFrame(raf); draw();};
+$("reset").onclick=()=>{reset(); draw();};
 draw();
 </script>
 </body></html>
