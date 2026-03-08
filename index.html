@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Goldacre–Bean plausible clang</title>
 <style>
-body{margin:0;font-family:system-ui,sans-serif;background:#0b1020;color:#e6eefb}
+body{margin:0;font-family:system-ui,sans-serif;background:#0b1020;color:#e6eefb;line-height:1.55}
 .wrap{max-width:1100px;margin:auto;padding:16px}.grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media(min-width:900px){.grid{grid-template-columns:1.5fr 1fr}} .card{background:#0f172a;border:1px solid #26344d;border-radius:18px;padding:14px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.badge{padding:6px 10px;border-radius:999px;background:#0b1322;border:1px solid #26344d}
@@ -11,8 +11,31 @@ body{margin:0;font-family:system-ui,sans-serif;background:#0b1020;color:#e6eefb}
 canvas{width:100%;height:auto;background:#050b16;border:1px solid #26344d;border-radius:14px}
 label{display:flex;justify-content:space-between;margin:8px 0 4px}.small{color:#9fb2cc;font-size:.9rem} input[type=range],select{width:100%}
 select,input{background:#09111f;color:#e6eefb;border:1px solid #26344d;border-radius:10px;padding:8px}
+.hero,.paper-section,.history{background:#0f172a;border:1px solid #26344d;border-radius:18px;padding:18px;margin-bottom:18px}
+.hero{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+@media(min-width:900px){.hero{grid-template-columns:1.2fr .8fr}}
+.hero h1,.history h2,.history h3,.paper-section h3{margin:0 0 10px 0}
+.hero p,.history p{margin:0 0 14px 0;color:#d8e3f6}
+.figure-stack{display:grid;gap:12px}.figure-stack img,.paper-images img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid #26344d;background:#08101d}
+.caption{font-size:.9rem;color:#9fb2cc;margin-top:8px}
+.paper-images{display:grid;grid-template-columns:1fr;gap:16px;margin-top:14px}
+@media(min-width:900px){.paper-images{grid-template-columns:1fr 1fr}}
+.history strong{color:#ffffff}.history em{font-style:italic}.history ul{margin:0 0 14px 22px;padding:0}.history li{margin:0 0 6px 0}
+.history h2{font-size:1.5rem}.history h3{font-size:1.1rem;color:#ffffff;margin-top:24px}
+.top-note{font-size:1.02rem;color:#dce7f8}
 </style></head>
 <body><div class="wrap">
+<section class="hero">
+  <div>
+    <div class="row"><span class="badge">Historical context</span><span class="badge">Appearance-only additions</span></div>
+    <h1>The Goldacre-Bean Cybernetic Morphogenesis Music Device</h1>
+    <p class="top-note">Press the start button below to hear music; move the sliders to change the sounds. This is a browser instrument, aiming to emulate the Goldacre–Bean machine from the late 1950s. The original device was designed as a computational model for intracellular communication, in the context of embryology research, and was exhibited at the Royal Society in 1959 (see below). But its ability to generate emergent patterns - from interacting pulse-generating “cells” -  was also used by its inventors to make music. The model below is faithful in structure rather than in exact circuitry: a 4×4 network, threshold-like firing, local inhibition, optional long-range nerve-net links, and evolving rhythmic themes. A longer explanation is given below. This webpage is a clumsy work in progress for private consumption in moderate doses only.</p>
+  </div>
+  <div class="figure-stack">
+    <img src="goldacre-bean-machine.jpg" alt="Dr R. J. Goldacre and Mr A. D. Bean with their electronic morphogenesis device">
+    <div class="caption">Goldacre and Bean with the electronic pattern-generator used to model cell interaction and morphogenesis.</div>
+  </div>
+</section>
 <div class="row" style="justify-content:space-between;align-items:flex-end">
 <div><div class="row"><span class="badge">Goldacre–Bean inspired</span><span class="badge">plausible clang version</span></div>
 <h2>Cybernetic Morphogenesis Music Device</h2>
@@ -52,6 +75,96 @@ select,input{background:#09111f;color:#e6eefb;border:1px solid #26344d;border-ra
 <div class="row" style="justify-content:space-between"><span>Hard gate</span><input id="hard" type="checkbox" checked></div>
 <div class="row" style="justify-content:space-between"><span>Mechanical strike layer</span><input id="strike" type="checkbox" checked></div>
 </div></div></div>
+
+<section class="paper-section">
+  <h3>Contemporary source material</h3>
+  <p class="small">Images from period documentation and publication pages relating to the Goldacre–Bean morphogenesis model.</p>
+  <div class="paper-images">
+    <figure>
+      <img src="goldacre-paper-page1.jpg" alt="First page of the paper A Model for Morphogenesis by R. J. Goldacre and A. D. Bean">
+      <figcaption class="caption">Nature paper page showing the model description and circuit figure.</figcaption>
+    </figure>
+    <figure>
+      <img src="goldacre-paper-page2.jpg" alt="Second page of the paper A Model for Morphogenesis by R. J. Goldacre and A. D. Bean">
+      <figcaption class="caption">Follow-on page discussing behaviour, symmetry breaking, and system properties.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="history">
+  <p>The <strong>Goldacre Bean device</strong> was an experimental electronic system built in the late 1950s by the British biologists <strong>Dr Reginald J. Goldacre</strong> and <strong>Mr Derek Bean</strong> to study morphogenesis—the process by which biological patterns form in living organisms. Although designed primarily as a biological model, it also produced sound, and contemporary accounts mention that the system could generate <strong>“melodies and rhythms.”</strong> In retrospect, it can be understood as an early example of a <strong>network of interacting electronic oscillators</strong>, and therefore sits at an interesting intersection of <strong>biological modelling, early cybernetics, analogue computing, and generative music</strong>.</p>
+
+  <h2>Origins and purpose</h2>
+  <p>Goldacre’s work was part of a broader mid-20th-century attempt to understand development and pattern formation in biological systems using <strong>cybernetic and electronic models</strong>. Researchers in this period often constructed physical circuits that behaved analogously to biological processes. The aim was not computation in the modern digital sense, but <strong>dynamic simulation</strong>: building electronic systems whose behaviour resembled living systems.</p>
+  <p>Goldacre’s device appears to have been inspired by ideas about <strong>excitable media and interacting cells</strong>, similar in spirit to models later associated with Alan Turing’s reaction–diffusion theory of morphogenesis. In such models, patterns arise when local interactions between elements—cells or chemical concentrations—produce waves, oscillations, or stable spatial structures.</p>
+  <p>The machine was described in a paper by Goldacre in <em>Nature</em>, where he referred to a network of electronic “cells.” Each cell represented an element in a simplified tissue model. The machine itself seems to have consisted of a <strong>grid of modules connected by patch leads</strong>, forming a configurable network.</p>
+
+  <h2>Structure of the device</h2>
+  <p>The available descriptions suggest that the system consisted of a number of identical electronic units—referred to as <strong>cells or “beans.”</strong> Each unit behaved somewhat like an excitable biological cell.</p>
+  <p>Technically, each cell likely contained:</p>
+  <ul>
+    <li>a <strong>capacitor</strong> that stored electrical charge</li>
+    <li>a <strong>threshold or switching element</strong> (possibly a transistor or valve circuit)</li>
+    <li>connections allowing signals to influence neighbouring cells</li>
+  </ul>
+  <p>The capacitor represented stored “tension” or activation within the cell. As charge accumulated, the cell approached a threshold. When the threshold was reached, the cell <strong>discharged or fired</strong>, sending pulses to other cells in the network.</p>
+  <p>Connections between cells could be <strong>inhibitory or excitatory</strong>. For example, a firing cell might delay or accelerate the activity of its neighbours. By wiring cells together in different patterns, the machine could simulate various biological tissues or networks.</p>
+  <p>Importantly, the cells were <strong>not clocked by a central timing system</strong>. Instead, each cell had its own natural charging time determined by its electrical components. The system therefore behaved as a <strong>network of loosely coupled oscillators</strong>, each influencing the timing of the others.</p>
+
+  <h2>Dynamics of the system</h2>
+  <p>Because each cell’s timing depended on both its internal state and the pulses arriving from other cells, the network could produce complex behaviour:</p>
+  <ul>
+    <li>rhythmic oscillations</li>
+    <li>travelling waves of activity</li>
+    <li>synchronisation between cells</li>
+    <li>shifting clusters of activity</li>
+  </ul>
+  <p>Goldacre noted that the frequencies of oscillation in the system often settled into <strong>simple whole-number ratios</strong>, a typical property of coupled oscillators. In biological terms, such behaviour could represent coordinated activity across tissues.</p>
+  <p>These dynamics also meant that the machine produced <strong>temporal patterns</strong>—sequences of pulses occurring in different cells at different times.</p>
+
+  <h2>The musical aspect</h2>
+  <p>At some point, Goldacre and colleagues arranged for the activity of the cells to be audible. Contemporary accounts state that <strong>each cell emitted a musical note when it became active</strong>. This implies that the firing of a cell triggered some form of audio output, possibly by:</p>
+  <ul>
+    <li>gating a tone generator</li>
+    <li>exciting a resonant circuit</li>
+    <li>producing a click that was amplified and filtered</li>
+  </ul>
+  <p>When the network ran, the pulses from different cells occurred at varying times and frequencies. The result was a sequence of tones reflecting the <strong>collective dynamics of the network</strong>.</p>
+  <p>Observers reported that the system produced <strong>melodies and rhythms</strong> that evolved over time. This makes sense given the behaviour of coupled oscillators: clusters of cells may synchronise temporarily, creating repeating motifs, before the pattern shifts as interactions change.</p>
+  <p>In other words, the music was not composed deliberately but <strong>emerged from the network’s dynamics</strong>.</p>
+
+  <h2>Relationship to computing</h2>
+  <p>The Goldacre device belongs to a tradition of <strong>analogue computing</strong>, where physical systems were built to model equations or processes directly. Unlike digital computers, such machines did not perform symbolic computation but instead embodied the system being studied.</p>
+  <p>Networks of interacting units were a common idea in early cybernetics and neuroscience-inspired computing. Devices like the Goldacre machine can be seen as distant relatives of later concepts such as:</p>
+  <ul>
+    <li>neural networks</li>
+    <li>cellular automata</li>
+    <li>excitable media simulations</li>
+  </ul>
+  <p>However, unlike later digital implementations, Goldacre’s machine was <strong>purely physical and continuous</strong>.</p>
+
+  <h2>Historical context in generative music</h2>
+  <p>From the perspective of music history, the Goldacre device is intriguing because it predates many later developments in algorithmic and generative composition.</p>
+  <p>During the late 1950s and early 1960s, several strands of experimental music were emerging:</p>
+  <ul>
+    <li>electronic studio composition (e.g., musique concrète and elektronische Musik)</li>
+    <li>early computer music experiments</li>
+    <li>stochastic or algorithmic composition</li>
+  </ul>
+  <p>But Goldacre’s machine differs from these traditions. Instead of generating music through formal rules or programmed algorithms, it produced sound through the <strong>spontaneous behaviour of a physical dynamical system</strong>.</p>
+  <p>In that sense it resembles later developments such as:</p>
+  <ul>
+    <li>analogue modular synthesizer patch networks</li>
+    <li>feedback systems used in experimental electronic music</li>
+    <li>generative music approaches based on interacting processes</li>
+  </ul>
+  <p>The device can therefore be viewed as an early example of <strong>cybernetic music</strong>, where sound arises from the behaviour of a self-organising system.</p>
+
+  <h2>Significance</h2>
+  <p>Although the Goldacre machine was built for biological research rather than musical experimentation, it illustrates a fascinating moment in mid-20th-century science when <strong>electronic circuits were used to explore life-like behaviour</strong>.</p>
+  <p>Its musical output appears to have been a by-product of the same properties that made the model scientifically interesting: oscillation, coupling, and self-organisation. Today these ideas are recognised as fundamental features of many complex systems.</p>
+  <p>Seen in hindsight, the device stands at a crossroads between <strong>analogue computing, biological modelling, and generative sound</strong>, anticipating later explorations of emergent behaviour in both science and art.</p>
+</section>
 
 <script>
 const GRID=4,N=16,BASE=[110,123.47,130.81,146.83,164.81,196,220,246.94,261.63,293.66,329.63,392,440,493.88,523.25,587.33],NAMES=["A2","B2","C3","D3","E3","G3","A3","B3","C4","D4","E4","G4","A4","B4","C5","D5"];
